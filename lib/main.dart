@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:quizzer/Quiz_brain.dart';
 void main() {
   runApp(QuizApp());
 }
@@ -10,9 +10,48 @@ class QuizApp extends StatefulWidget {
 }
 
 class _QuizAppState extends State<QuizApp> {
+
+  List <Icon> scoreKeeper=[];
+  int qNumber=0;
+  bool reachedEnd=false;
+  QuizBrain quizBrain=QuizBrain();
+
+
+
   @override
   Widget build(BuildContext context) {
 
+    void checkCorrectAnswer(bool clickedButton){
+      bool correctAnswer=quizBrain.getAnswer(qNumber);
+      if(correctAnswer==clickedButton){
+        scoreKeeper.insert(0,
+          Icon(
+            Icons.check,
+            color: Colors.green,
+          ),
+        );
+      }else{
+        scoreKeeper.insert(0,
+          Icon(
+            Icons.close,
+            color: Colors.red,
+          ),
+        );
+      }
+    }
+
+    void markQuesComplete(bool buttonType){
+      if(qNumber == quizBrain.lengthQuizList()-1 && !reachedEnd){
+        checkCorrectAnswer(buttonType);
+        reachedEnd=true;
+      }
+      if(qNumber < quizBrain.lengthQuizList()-1){
+        checkCorrectAnswer(buttonType);
+        qNumber++;
+      }
+
+    }
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -30,7 +69,7 @@ class _QuizAppState extends State<QuizApp> {
                   child: Container(
                     margin: EdgeInsets.only(left: 20.0, right: 20.0),
                     alignment: Alignment.center,
-                    child: Text('Google was Originally Called "Backrub"',
+                    child: Text(quizBrain.getQuestionText(qNumber),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 20.0,
@@ -42,7 +81,10 @@ class _QuizAppState extends State<QuizApp> {
               Expanded(
                  flex: 1,
                  child: TextButton(
-                     onPressed: (){
+                     onPressed: qNumber==quizBrain.lengthQuizList() ? null :  (){
+                       setState(() {
+                         markQuesComplete(true);
+                       });
                      },
                      child: Container(
                        margin: EdgeInsets.only(bottom: 40.0),
@@ -62,7 +104,10 @@ class _QuizAppState extends State<QuizApp> {
               Expanded(
                 flex: 1,
                 child: TextButton(
-                  onPressed: (){
+                  onPressed: qNumber==quizBrain.lengthQuizList() ? null : (){
+                    setState(() {
+                      markQuesComplete(false);
+                    });
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 40.0),
@@ -80,39 +125,11 @@ class _QuizAppState extends State<QuizApp> {
               ),
 
               Row(
-                children: [
-                  Icon(
-                    Icons.check,
-                    color:Colors.green,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color:Colors.red,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color:Colors.red,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color:Colors.red,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color:Colors.red,
-                  ),
-                  Icon(
-                    Icons.close,
-                    color:Colors.red,
-                  ),
-                ],
+                children: scoreKeeper,
               ),
-
-
             ],
           ),
         ),
-
       ),
     );
   }
