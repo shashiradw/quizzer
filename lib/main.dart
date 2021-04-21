@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quizzer/Quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
 void main() {
-  runApp(QuizApp());
+  runApp(MaterialApp(home: QuizApp()));
 }
 
 class QuizApp extends StatefulWidget {
@@ -15,8 +17,6 @@ class _QuizAppState extends State<QuizApp> {
   int qNumber=0;
   bool reachedEnd=false;
   QuizBrain quizBrain=QuizBrain();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +52,7 @@ class _QuizAppState extends State<QuizApp> {
 
     }
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           title: Text('Quizzer'),
           backgroundColor: Colors.white30,
@@ -84,6 +82,13 @@ class _QuizAppState extends State<QuizApp> {
                      onPressed: qNumber==quizBrain.lengthQuizList() ? null :  (){
                        setState(() {
                          markQuesComplete(true);
+                         if(reachedEnd){
+                           //Reset
+                           Alert(context: context, title: "Finished", desc: "You have reached to end!").show();
+                           scoreKeeper=[];
+                           qNumber=0;
+                           reachedEnd=false;
+                         }
                        });
                      },
                      child: Container(
@@ -107,6 +112,14 @@ class _QuizAppState extends State<QuizApp> {
                   onPressed: qNumber==quizBrain.lengthQuizList() ? null : (){
                     setState(() {
                       markQuesComplete(false);
+
+                      if(reachedEnd){
+                        //Reset
+                        Alert(context: context, title: "Finished", desc: "You have reached to end!").show();
+                        scoreKeeper=[];
+                        qNumber=0;
+                        reachedEnd=false;
+                      }
                     });
                   },
                   child: Container(
@@ -130,8 +143,7 @@ class _QuizAppState extends State<QuizApp> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
