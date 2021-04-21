@@ -24,14 +24,14 @@ class _QuizAppState extends State<QuizApp> {
     void checkCorrectAnswer(bool clickedButton){
       bool correctAnswer=quizBrain.getAnswer(qNumber);
       if(correctAnswer==clickedButton){
-        scoreKeeper.insert(0,
+        scoreKeeper.add(
           Icon(
             Icons.check,
             color: Colors.green,
           ),
         );
       }else{
-        scoreKeeper.insert(0,
+        scoreKeeper.add(
           Icon(
             Icons.close,
             color: Colors.red,
@@ -51,7 +51,7 @@ class _QuizAppState extends State<QuizApp> {
       }
 
     }
-    
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
